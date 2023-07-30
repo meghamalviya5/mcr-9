@@ -1,0 +1,19 @@
+.video-card {
+  width: 20rem;
+}
+
+.user-pic {
+  width: 3.5rem;
+  height: 3rem;
+  border-radius: 50%;
+}
+
+.watch-later-icon {
+  padding: 0.5rem;
+  right: 0;
+  border-bottom-left-radius: 1rem;
+}
+
+.watch-later-icon:hover {
+  color: #1791de;
+}
