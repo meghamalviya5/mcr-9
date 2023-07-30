@@ -13,8 +13,11 @@ export const videosReducer = (state, action) => {
     case "SEARCH_VIDEOS":
       return { ...state, filteredVideos: action.payload };
 
-    case "SET_DISPATCH_STATUS":
-      return { ...state, [action.payload.key]: [action.payload.value] };
+    case "SET_MODAL_STATUS":
+      return { ...state, [action.payload.key]: action.payload.value };
+
+    case "UPDATE_VIDEO_NOTES":
+      return { ...state, allVideos: action.payload };
 
     default:
       return { state };

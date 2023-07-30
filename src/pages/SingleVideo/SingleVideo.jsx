@@ -9,19 +9,21 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faClock as faRegularClock } from "@fortawesome/free-regular-svg-icons";
 import playlistAdd from "../../assets/playlistAdd.svg";
-import notes from "../../assets/notes.svg";
+import notesAdd from "../../assets/notesAdd.svg";
 import "./SingleVideo.css";
+
+import AddPlayList from "../../components/Modals/AddPlaylist/AddPlayList";
+import AddNotes from "../../components/Modals/Notes/AddNotes";
 
 const SingleVideo = () => {
   const { videoID } = useParams();
 
   const {
-    state: { allVideos },
+    state: { allVideos, addNoteModalStatus, addPlaylistModalStatus },
     dispatch,
     findInWatchList,
     addToWatchLater,
     removeFromWatchLater,
-    addNoteModalStatus,
   } = useContext(VideoContext);
 
   console.log("videoID in single: ", videoID);
@@ -43,7 +45,7 @@ const SingleVideo = () => {
             allowFullScreen
             title="Embedded youtube"
           />
-          <div className="flex flex-gap-4 flex-space-between video-action">
+          <div className="flex flex-gap-4 flex-space-between video-info">
             <div className="flex flex-gap-4">
               <img
                 src="https://picsum.photos/200/300"
@@ -52,7 +54,7 @@ const SingleVideo = () => {
               />
               <div className="fw-bold">{title}</div>
             </div>
-            <div className="flex ">
+            <div className="flex video-action">
               <div>
                 {findInWatchList(_id) ? (
                   <FontAwesomeIcon
@@ -73,25 +75,36 @@ const SingleVideo = () => {
                   src={playlistAdd}
                   alt="playlist"
                   className="playlist-icon"
+                  onClick={() =>
+                    dispatch({
+                      type: "SET_MODAL_STATUS",
+                      payload: {
+                        key: "addNoteModalStatus",
+                        value: !addNoteModalStatus,
+                      },
+                    })
+                  }
                 />
               </div>
-              {/* <div> */}
-              <img
-                src={notes}
-                className="notes-icon"
-                onClick={() =>
-                  dispatch({
-                    type: "SET_ADD_NOTE_MODAL_STATUS",
-                    payload: {
-                      key: "addNoteModalStatus",
-                      value: !addNoteModalStatus,
-                    },
-                  })
-                }
-              />
-              {/* </div> */}
+              <div>
+                <img
+                  src={notesAdd}
+                  className="notes-icon"
+                  onClick={() =>
+                    dispatch({
+                      type: "SET_MODAL_STATUS",
+                      payload: {
+                        key: "addNoteModalStatus",
+                        value: !addNoteModalStatus,
+                      },
+                    })
+                  }
+                />
+              </div>
             </div>
           </div>
+          {addNoteModalStatus ? <AddNotes videoID={_id} /> : null}
+          {addPlaylistModalStatus ? <AddPlayList videoID={_id} /> : null}
         </div>
         <div>
           <h3 className="mt-m">My Notes</h3>

@@ -64,6 +64,21 @@ const VideoContextProvider = ({ children }) => {
   const findInWatchList = (videoID) =>
     state.watchLaterList.find((video) => video._id === videoID);
 
+  const addNotesToVideo = (e, videoID) => {
+    e.preventDefault();
+    let data = new FormData(e.target);
+    const userNotes = data.get("note");
+    // const video = state.allVideos.find((video) => video._id === videoID);
+    // const updatedVideo = {...video, notes: userNotes};
+    const updatedAllVideos = state.allVideos.map((video) =>
+      video._id === videoID
+        ? { ...video, notes: [...video.notes, userNotes] }
+        : video
+    );
+
+    dispatch({ type: "UPDATE_VIDEO_NOTES", payload: updatedAllVideos });
+  };
+
   const valueProp = {
     state,
     dispatch,
@@ -71,6 +86,7 @@ const VideoContextProvider = ({ children }) => {
     removeFromWatchLater,
     searchVideoByTitle,
     findInWatchList,
+    addNotesToVideo,
   };
 
   return (
