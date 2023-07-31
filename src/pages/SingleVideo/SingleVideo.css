@@ -24,10 +24,10 @@
 .video-info {
   border-bottom: 1px solid black;
   padding: 1rem;
-  align-items: center;
 }
 
 .video-action {
   width: 7rem;
   justify-content: space-around;
+  align-items: center;
 }

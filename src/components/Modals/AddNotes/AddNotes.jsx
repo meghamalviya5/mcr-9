@@ -3,26 +3,18 @@ import "../Modal.css";
 import { VideoContext } from "../../../contexts/VideosContext";
 
 const AddNotes = ({ videoID }) => {
-  const addNoteModalRef = useRef();
+  console.log("in add notes");
 
-  const { dispatch, addNotesToVideo } = useContext(VideoContext);
+  const {
+    state: { addNoteModalStatus },
+    dispatch,
+    addNotesToVideo,
+  } = useContext(VideoContext);
+
+  if (!addNoteModalStatus) return null;
 
   return (
-    <div
-      className="modal"
-      onClick={(e) => {
-        console.log(e.currentTarget);
-        if (e.target === addNoteModalRef.current)
-          dispatch({
-            type: "SET_MODAL_STATUS",
-            payload: {
-              key: "addNoteModalStatus",
-              value: false,
-            },
-          });
-      }}
-      ref={addNoteModalRef}
-    >
+    <div className="modal">
       <div className="modal-content relative">
         <button
           className="closeBtn"
@@ -51,8 +43,8 @@ const AddNotes = ({ videoID }) => {
             });
           }}
         >
-          <div className="flex flex-col flex-row-gap-1">
-            <div className="flex flex-col">
+          <div className="flex flex-column flex-gap-2">
+            <div className="flex flex-column">
               <input
                 type="text"
                 name="note"

@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { videos } from "../backend/db/videos";
 import { videosReducer } from "../reducers/VideosReducer";
 import { categories } from "../backend/db/categories";
@@ -8,7 +8,7 @@ export const VideoContext = createContext();
 const VideoContextProvider = ({ children }) => {
   const initialState = {
     categories: categories,
-    allVideos: videos,
+    allVideos: JSON.parse(localStorage.getItem("AllVideos")) || videos,
     filteredVideos: videos,
     watchLaterList: JSON.parse(
       localStorage.getItem("WatchLaterVideos") || "[]"
@@ -16,13 +16,14 @@ const VideoContextProvider = ({ children }) => {
     playlist: JSON.parse(localStorage.getItem("Playlist") || "[]"),
     addNoteModalStatus: false,
     addPlaylistModalStatus: false,
+    editNoteModalStatus: false,
   };
 
   const [state, dispatch] = useReducer(videosReducer, initialState);
 
   const addToWatchLater = (videoID) => {
     const video = state.allVideos.find((video) => video._id === videoID);
-    //console.log(video, " --object");
+
     if (localStorage.getItem("WatchLaterVideos")) {
       let laterVideos = JSON.parse(localStorage.getItem("WatchLaterVideos"));
       laterVideos = [...laterVideos, video];
@@ -66,15 +67,30 @@ const VideoContextProvider = ({ children }) => {
 
   const addNotesToVideo = (e, videoID) => {
     e.preventDefault();
-    let data = new FormData(e.target);
+    const data = new FormData(e.target);
     const userNotes = data.get("note");
-    // const video = state.allVideos.find((video) => video._id === videoID);
-    // const updatedVideo = {...video, notes: userNotes};
-    const updatedAllVideos = state.allVideos.map((video) =>
+
+    let updatedAllVideos = state.allVideos.map((video) =>
       video._id === videoID
         ? { ...video, notes: [...video.notes, userNotes] }
         : video
     );
+
+    localStorage.setItem("AllVideos", JSON.stringify(updatedAllVideos));
+
+    dispatch({ type: "UPDATE_VIDEO_NOTES", payload: updatedAllVideos });
+  };
+
+  const editNote = () => {};
+
+  const deleteNote = (userNote, videoID) => {
+    let updatedAllVideos = state.allVideos.map((video) =>
+      video._id === videoID
+        ? { ...video, notes: video.notes.filter((note) => note !== userNote) }
+        : video
+    );
+
+    localStorage.setItem("AllVideos", JSON.stringify(updatedAllVideos));
 
     dispatch({ type: "UPDATE_VIDEO_NOTES", payload: updatedAllVideos });
   };
@@ -87,6 +103,8 @@ const VideoContextProvider = ({ children }) => {
     searchVideoByTitle,
     findInWatchList,
     addNotesToVideo,
+    editNote,
+    deleteNote,
   };
 
   return (

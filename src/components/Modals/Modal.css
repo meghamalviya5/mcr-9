@@ -1,14 +1,15 @@
 .modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  /* position: fixed; */
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+  /* width: 100%;
+  height: 100%; */
+  /* background-color: rgba(0, 0, 0, 0.5); */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
+  /* justify-content: center;
+  align-items: center; */
+  /* z-index: 100; */
 }
 
 .modal-content {
@@ -33,11 +34,6 @@
   font-size: 1.3rem;
 }
 
-.sub-heading {
-  color: lightgrey;
-  font-size: 1.1rem;
-}
-
 .closeBtn {
   cursor: pointer;
   font-weight: 500;
@@ -59,10 +55,6 @@
 .closeBtn:hover {
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.04);
   transform: translate(-4px, 4px);
-}
-
-.caution {
-  color: rgb(142, 137, 137);
 }
 
 .btn-submit {

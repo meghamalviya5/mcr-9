@@ -18,7 +18,7 @@ const VideoCard = ({ video }) => {
         className="flex flex-column flex-gap-2 relative video-card"
       >
         <div>
-          <Link to={`/single-video/${_id}`}>
+          <Link to={`/single-video/${_id}`} className="relative">
             <img src={thumbnail} alt="video-thumbnail" />
           </Link>
         </div>

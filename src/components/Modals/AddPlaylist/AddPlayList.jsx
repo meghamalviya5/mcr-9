@@ -29,7 +29,7 @@ const AddPlayList = () => {
       <div className="modal-content relative">
         <div className="modalHeader flex flex-col">
           <p className="heading">Add to Playlist</p>
-          <p className="sub-heading">Fill in your personal information.</p>
+          {/* <p className="sub-heading">Fill in your personal information.</p> */}
         </div>
         <button
           className="closeBtn"
