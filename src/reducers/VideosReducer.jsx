@@ -19,6 +19,12 @@ export const videosReducer = (state, action) => {
     case "UPDATE_VIDEO_NOTES":
       return { ...state, allVideos: action.payload };
 
+    case "SET_EDIT_NOTE":
+      return { ...state, selectedEditNote: action.payload };
+
+    // case "SET_SELECTED_NOTE_ID":
+    //   return { ...state, selectedNoteId: action.payload };
+
     default:
       return { state };
   }

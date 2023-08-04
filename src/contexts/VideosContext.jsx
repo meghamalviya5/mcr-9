@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
+import { v4 as uuid } from "uuid";
 import { videos } from "../backend/db/videos";
 import { videosReducer } from "../reducers/VideosReducer";
 import { categories } from "../backend/db/categories";
@@ -17,6 +18,7 @@ const VideoContextProvider = ({ children }) => {
     addNoteModalStatus: false,
     addPlaylistModalStatus: false,
     editNoteModalStatus: false,
+    selectedEditNote: {},
   };
 
   const [state, dispatch] = useReducer(videosReducer, initialState);
@@ -69,10 +71,11 @@ const VideoContextProvider = ({ children }) => {
     e.preventDefault();
     const data = new FormData(e.target);
     const userNotes = data.get("note");
+    const noteToAdd = { noteId: uuid(), note: userNotes };
 
     let updatedAllVideos = state.allVideos.map((video) =>
       video._id === videoID
-        ? { ...video, notes: [...video.notes, userNotes] }
+        ? { ...video, notes: [...video.notes, noteToAdd] }
         : video
     );
 
@@ -86,7 +89,10 @@ const VideoContextProvider = ({ children }) => {
   const deleteNote = (userNote, videoID) => {
     let updatedAllVideos = state.allVideos.map((video) =>
       video._id === videoID
-        ? { ...video, notes: video.notes.filter((note) => note !== userNote) }
+        ? {
+            ...video,
+            notes: video.notes.filter(({ note }) => note !== userNote),
+          }
         : video
     );
 

@@ -26,6 +26,7 @@ const SingleVideo = () => {
       addNoteModalStatus,
       addPlaylistModalStatus,
       editNoteModalStatus,
+      selectedEditNote,
     },
     dispatch,
     findInWatchList,
@@ -37,9 +38,9 @@ const SingleVideo = () => {
 
   console.log("videoID in single: ", videoID);
 
-  const { _id, title, src, notes } = allVideos.find(
-    (video) => video._id === Number(videoID)
-  );
+  const video = allVideos.find((video) => video._id === Number(videoID));
+
+  const { _id, title, src, notes } = video;
 
   return (
     <div className="container">
@@ -88,8 +89,8 @@ const SingleVideo = () => {
                     dispatch({
                       type: "SET_MODAL_STATUS",
                       payload: {
-                        key: "addNoteModalStatus",
-                        value: !addNoteModalStatus,
+                        key: "addPlaylistModalStatus",
+                        value: !addPlaylistModalStatus,
                       },
                     })
                   }
@@ -129,46 +130,55 @@ const SingleVideo = () => {
         </div>
         <div>
           <h3 className="mt-m">My Notes</h3>
-          {notes.map((note) => (
-            <div className="flex flex-space-between">
-              <div>{note}</div>
-              <div>
-                <FontAwesomeIcon
-                  icon={faEdit}
-                  onClick={(e) => {
-                    dispatch({
-                      type: "SET_MODAL_STATUS",
-                      payload: {
-                        key: "editNoteModalStatus",
-                        value: !editNoteModalStatus,
-                      },
-                    });
-                    editNote(note, _id);
-                  }}
-                  className="txt-cursor"
-                />
+          {notes.map((singleNote) => {
+            const { noteId, note } = singleNote;
+            return (
+              <div className="flex flex-space-between" key={noteId}>
+                <div>{note}</div>
+                <div>
+                  <FontAwesomeIcon
+                    icon={faEdit}
+                    onClick={() => {
+                      dispatch({
+                        type: "SET_MODAL_STATUS",
+                        payload: {
+                          key: "editNoteModalStatus",
+                          value: !editNoteModalStatus,
+                        },
+                      });
+                      dispatch({ type: "SET_EDIT_NOTE", payload: singleNote });
+                      editNote(note, _id);
+                    }}
+                    className="txt-cursor"
+                  />
 
-                <FontAwesomeIcon
-                  icon={faTrash}
-                  onClick={() => deleteNote(note, _id)}
-                  className="txt-cursor"
-                />
-                <OutsideClickHandler
-                  onOutsideClick={() =>
-                    dispatch({
-                      type: "SET_MODAL_STATUS",
-                      payload: {
-                        key: "editNoteModalStatus",
-                        value: false,
-                      },
-                    })
-                  }
-                >
-                  {editNoteModalStatus ? <EditNotes /> : null}
-                </OutsideClickHandler>
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    onClick={() => deleteNote(note, _id)}
+                    className="txt-cursor"
+                  />
+                  {editNoteModalStatus && noteId === selectedEditNote.noteId ? (
+                    <OutsideClickHandler
+                      onOutsideClick={() =>
+                        dispatch({
+                          type: "SET_MODAL_STATUS",
+                          payload: {
+                            key: "editNoteModalStatus",
+                            value: false,
+                          },
+                        })
+                      }
+                    >
+                      {/* {editNoteModalStatus &&
+                    noteId === selectedEditNote.noteId ? ( */}
+                      <EditNotes video={video} />
+                      {/* ) : null} */}
+                    </OutsideClickHandler>
+                  ) : null}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       <div className="more-videos-sidebar">More Videos</div>

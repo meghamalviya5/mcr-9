@@ -20,8 +20,8 @@ const VideoListing = () => {
     <div className="flex flex-column flex-gap-4">
       <h3>{categoryName}</h3>
       <div className="flex flex-wrap flex-gap-4 mt-xs ">
-        {videosByCategory.map((video) => (
-          <VideoCard video={video} />
+        {videosByCategory.map((video, id) => (
+          <VideoCard video={video} key={id} />
         ))}
       </div>
     </div>
