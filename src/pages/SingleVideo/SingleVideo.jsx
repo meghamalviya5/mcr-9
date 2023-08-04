@@ -99,6 +99,7 @@ const SingleVideo = () => {
               <div>
                 <img
                   src={notesAdd}
+                  alt="add note"
                   className="notes-icon txt-cursor"
                   onClick={() =>
                     dispatch({
@@ -112,15 +113,22 @@ const SingleVideo = () => {
                 />
               </div>
               <OutsideClickHandler
-                onOutsideClick={() =>
+                onOutsideClick={() => {
                   dispatch({
                     type: "SET_MODAL_STATUS",
                     payload: {
                       key: "addNoteModalStatus",
                       value: false,
                     },
-                  })
-                }
+                  });
+                  dispatch({
+                    type: "SET_MODAL_STATUS",
+                    payload: {
+                      key: "addPlaylistModalStatus",
+                      value: false,
+                    },
+                  });
+                }}
               >
                 {addNoteModalStatus ? <AddNotes videoID={_id} /> : null}
                 {addPlaylistModalStatus ? <AddPlayList videoID={_id} /> : null}

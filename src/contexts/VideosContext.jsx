@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useReducer } from "react";
 import { v4 as uuid } from "uuid";
 import { videos } from "../backend/db/videos";
 import { videosReducer } from "../reducers/VideosReducer";
@@ -14,7 +14,7 @@ const VideoContextProvider = ({ children }) => {
     watchLaterList: JSON.parse(
       localStorage.getItem("WatchLaterVideos") || "[]"
     ),
-    playlist: JSON.parse(localStorage.getItem("Playlist") || "[]"),
+    playlist: JSON.parse(localStorage.getItem("Playlists") || "[]"),
     addNoteModalStatus: false,
     addPlaylistModalStatus: false,
     editNoteModalStatus: false,
@@ -84,8 +84,6 @@ const VideoContextProvider = ({ children }) => {
     dispatch({ type: "UPDATE_VIDEO_NOTES", payload: updatedAllVideos });
   };
 
-  const editNote = () => {};
-
   const deleteNote = (userNote, videoID) => {
     let updatedAllVideos = state.allVideos.map((video) =>
       video._id === videoID
@@ -101,6 +99,36 @@ const VideoContextProvider = ({ children }) => {
     dispatch({ type: "UPDATE_VIDEO_NOTES", payload: updatedAllVideos });
   };
 
+  const createPlaylist = (e, newList) => {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const newPlaylist = {
+      id: uuid(),
+      title: data.get("title"),
+      description: data.get("description"),
+    };
+
+    localStorage.setItem(
+      "Playlists",
+      JSON.stringify([...state.playlist, newPlaylist])
+    );
+
+    dispatch({
+      type: "UPDATE_PLAYLIST",
+      payload: [...state.playlist, newPlaylist],
+    });
+  };
+
+  const deletePlaylist = (e, id) => {
+    const updatedPlaylist = state.playlist.filter(
+      (singleList) => singleList.id !== id
+    );
+
+    localStorage.setItem("Playlists", JSON.stringify(updatedPlaylist));
+
+    dispatch({ type: "UPDATE_PLAYLIST", payload: updatedPlaylist });
+  };
+
   const valueProp = {
     state,
     dispatch,
@@ -109,8 +137,9 @@ const VideoContextProvider = ({ children }) => {
     searchVideoByTitle,
     findInWatchList,
     addNotesToVideo,
-    editNote,
     deleteNote,
+    createPlaylist,
+    deletePlaylist,
   };
 
   return (

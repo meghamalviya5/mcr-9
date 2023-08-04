@@ -1,69 +1,77 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext } from "react";
 import "../Modal.css";
 import { VideoContext } from "../../../contexts/VideosContext";
 
 const AddPlayList = () => {
-  const addPlaylistModalRef = useRef();
+  // const addPlaylistModalRef = useRef();
 
   const {
-    state: { addPlaylistModalStatus },
+    state: { playlist },
     dispatch,
+    createPlaylist,
+    deletePlaylist,
   } = useContext(VideoContext);
 
   return (
-    <div
-      className="modal"
-      onClick={(e) => {
-        console.log(e.currentTarget);
-        if (e.target === addPlaylistModalRef.current)
-          dispatch({
-            type: "SET_MODAL_STATUS",
-            payload: {
-              key: "addPlaylistModalStatus",
-              value: !addPlaylistModalStatus,
-            },
-          });
-      }}
-      ref={addPlaylistModalRef}
-    >
+    <div className="modal">
       <div className="modal-content relative">
-        <div className="modalHeader flex flex-col">
+        <div className="modalHeader flex flex-column">
           <p className="heading">Add to Playlist</p>
-          {/* <p className="sub-heading">Fill in your personal information.</p> */}
         </div>
         <button
           className="closeBtn"
-          // onClick={() =>
-          //   dispatch({
-          //     type: "ADD_REVIEW_MODAL_STATUS",
-          //     payload: false,
-          //   })
-          // }
+          onClick={() =>
+            dispatch({
+              type: "SET_MODAL_STATUS",
+              payload: {
+                key: "addPlaylistModalStatus",
+                value: false,
+              },
+            })
+          }
         >
           X
         </button>
 
         <form
-          onSubmit={() => {
-            // dispatch({ type: "SET_ADD_RSVP_MODAL_STATUS", payload: false });
-            // dispatch({
-            //   type: "SET_RSVP_BUTTON_TEXT",
-            //   payload: "Already RSVPed",
-            // });
+          onSubmit={(e) => {
+            dispatch({
+              type: "SET_MODAL_STATUS",
+              payload: {
+                key: "addPlaylistModalStatus",
+                value: false,
+              },
+            });
+            createPlaylist(e);
           }}
         >
-          <div className="flex flex-col flex-row-gap-1">
+          <div className="flex flex-column flex-row-gap-1">
+            <div className="flex flex-column">
+              <input
+                type="text"
+                className="form-input"
+                name="title"
+                placeholder="Enter title of your playlist"
+              />
+            </div>
             <div className="flex flex-col">
               <input
                 type="text"
                 className="form-input"
-                placeholder="New Playlists"
+                name="description"
+                placeholder="Write a description"
               />
             </div>
 
             <button type="submit" className="btn-rsvp">
-              Add New Playlist
+              Create New Playlist
             </button>
+            {playlist.map(({ id, title }) => (
+              <div className="flex flex-space-between" key={id}>
+                <p>{title}</p>
+                <span onClick={(e) => deletePlaylist(e, id)}>X</span>
+              </div>
+            ))}
           </div>
         </form>
       </div>
