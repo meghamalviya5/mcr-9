@@ -131,7 +131,7 @@ const SingleVideo = () => {
                 }}
               >
                 {addNoteModalStatus ? <AddNotes videoID={_id} /> : null}
-                {addPlaylistModalStatus ? <AddPlayList videoID={_id} /> : null}
+                {addPlaylistModalStatus ? <AddPlayList video={video} /> : null}
               </OutsideClickHandler>
             </div>
           </div>

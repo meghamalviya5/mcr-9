@@ -17,6 +17,7 @@ const VideoContextProvider = ({ children }) => {
     playlist: JSON.parse(localStorage.getItem("Playlists") || "[]"),
     addNoteModalStatus: false,
     addPlaylistModalStatus: false,
+    addMorePlaylistModalStatus: false,
     editNoteModalStatus: false,
     selectedEditNote: {},
   };
@@ -99,13 +100,14 @@ const VideoContextProvider = ({ children }) => {
     dispatch({ type: "UPDATE_VIDEO_NOTES", payload: updatedAllVideos });
   };
 
-  const createPlaylist = (e, newList) => {
+  const createPlaylist = (e, video) => {
     e.preventDefault();
     const data = new FormData(e.target);
     const newPlaylist = {
       id: uuid(),
       title: data.get("title"),
       description: data.get("description"),
+      videos: video ? [video] : [],
     };
 
     localStorage.setItem(
@@ -117,6 +119,37 @@ const VideoContextProvider = ({ children }) => {
       type: "UPDATE_PLAYLIST",
       payload: [...state.playlist, newPlaylist],
     });
+  };
+
+  const saveToPlaylist = (e, playlistId, video) => {
+    const allPlaylists = JSON.parse(localStorage.getItem("Playlists"));
+    const updatedPlaylist = allPlaylists.map((playlist) =>
+      playlist.id === playlistId
+        ? { ...playlist, videos: [...playlist.videos, video] }
+        : playlist
+    );
+
+    localStorage.setItem("Playlists", JSON.stringify(updatedPlaylist));
+
+    dispatch({
+      type: "UPDATE_PLAYLIST",
+      payload: updatedPlaylist,
+    });
+  };
+
+  const deletePlaylistVideo = (playlistId, videoId) => {
+    const updatedPlaylistVideos = state.playlist.map((list) =>
+      list.id === playlistId
+        ? {
+            ...list,
+            videos: list.videos.filter((video) => video._id !== videoId),
+          }
+        : list
+    );
+
+    localStorage.setItem("Playlists", JSON.stringify(updatedPlaylistVideos));
+
+    dispatch({ type: "UPDATE_PLAYLIST", payload: updatedPlaylistVideos });
   };
 
   const deletePlaylist = (e, id) => {
@@ -139,6 +172,8 @@ const VideoContextProvider = ({ children }) => {
     addNotesToVideo,
     deleteNote,
     createPlaylist,
+    saveToPlaylist,
+    deletePlaylistVideo,
     deletePlaylist,
   };
 
